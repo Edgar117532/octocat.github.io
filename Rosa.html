@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Para Ti 🌹</title>
+<style>
+  body {
+    margin: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  canvas {
+    background: black;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas" width="800" height="800"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+// 🌹 Definición de regiones (simula regions.json)
+const regions = [
+  // Hoja izquierda
+  {
+    color: "rgb(0,150,0)",
+    points: [
+      [-150,-50], [-300,-100], [-250,0], [-300,100], [-150,50]
+    ]
+  },
+  // Hoja derecha
+  {
+    color: "rgb(0,160,0)",
+    points: [
+      [150,-50], [300,-100], [250,0], [300,100], [150,50]
+    ]
+  },
+  // Pétalo central
+  {
+    color: "rgb(180,0,0)",
+    points: [
+      [0,200], [-80,80], [-40,-100], [0,-200], [40,-100], [80,80]
+    ]
+  },
+  // Pétalo izquierdo
+  {
+    color: "rgb(200,0,0)",
+    points: [
+      [-40,100], [-160,40], [-140,-40], [-40,-80]
+    ]
+  },
+  // Pétalo derecho
+  {
+    color: "rgb(200,0,0)",
+    points: [
+      [40,100], [160,40], [140,-40], [40,-80]
+    ]
+  }
+];
+
+// Configuración
+ctx.lineWidth = 2;
+ctx.translate(canvas.width / 2, canvas.height / 2);
+
+let regionIndex = 0;
+let pointIndex = 0;
+
+function drawStep() {
+  if (regionIndex >= regions.length) return;
+
+  const region = regions[regionIndex];
+  const pts = region.points;
+
+  if (pointIndex === 0) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], -pts[0][1]);
+    ctx.strokeStyle = region.color;
+    ctx.fillStyle = region.color;
+  }
+
+  if (pointIndex < pts.length) {
+    ctx.lineTo(pts[pointIndex][0], -pts[pointIndex][1]);
+    ctx.stroke();
+    pointIndex++;
+  } else {
+    ctx.closePath();
+    ctx.fill();
+    regionIndex++;
+    pointIndex = 0;
+  }
+
+  requestAnimationFrame(drawStep);
+}
+
+drawStep();
+</script>
+
+</body>
+</html>
